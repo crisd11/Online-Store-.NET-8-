@@ -1,12 +1,14 @@
 using Core.Interfaces;
+using Core.Interfaces;
 using Infrastructure.Data;
+using Infrastructure.Data;
+using Infrastructure.Services;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Core.Interfaces;
-using Infrastructure.Data;
-using Infrastructure.Services;
+using OnlineStore.Core.Interfaces;
+using OnlineStore.Infrastructure.Services;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +25,7 @@ builder.Services.AddDbContext<OnlineStoreDbContext>(options =>
 
 // Services
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 // CORS
 builder.Services.AddCors(options =>
@@ -81,5 +84,11 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<OnlineStoreDbContext>();
+    await OnlineStore.Infrastructure.Data.DbSeeder.SeedAsync(db);
+}
 
 app.Run();

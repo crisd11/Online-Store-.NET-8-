@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace OnlineStore.Api.Controllers
+namespace API_OnlineStore.Controllers
 {
     [ApiController]
     [Authorize]
