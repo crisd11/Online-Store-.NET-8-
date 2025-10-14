@@ -6,7 +6,7 @@ namespace OnlineStore.Core.Interfaces
     public interface IProductService
     {
         Task<PagedResult<ProductDTO>> GetAsync(ProductQuery query);
-        Task<ProductDTO?> GetByIdAsync(Guid id);
+        Task<ProductDTO?> GetByIdAsync(int id);
 
         // (Admin - opcional para más adelante)
         // Task<ProductDto> CreateAsync(ProductDto dto);

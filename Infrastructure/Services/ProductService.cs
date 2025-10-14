@@ -36,7 +36,6 @@ namespace OnlineStore.Infrastructure.Services
             if (q.MaxPrice.HasValue)
                 query = query.Where(p => p.Price <= q.MaxPrice.Value);
 
-            // Sorting
             var sortBy = (q.SortBy ?? "createdAt").ToLower();
             var sortDir = (q.SortDir ?? "desc").ToLower();
 
@@ -47,7 +46,7 @@ namespace OnlineStore.Infrastructure.Services
                 ("price", "asc") => query.OrderBy(p => p.Price),
                 ("price", "desc") => query.OrderByDescending(p => p.Price),
                 ("createdat", "asc") => query.OrderBy(p => p.CreatedAt),
-                _ => query.OrderByDescending(p => p.CreatedAt) // createdAt desc default
+                _ => query.OrderByDescending(p => p.CreatedAt)
             };
 
             var page = q.Page <= 0 ? 1 : q.Page;
@@ -77,7 +76,7 @@ namespace OnlineStore.Infrastructure.Services
             };
         }
 
-        public async Task<ProductDTO?> GetByIdAsync(Guid id)
+        public async Task<ProductDTO?> GetByIdAsync(int id)
         {
             return await _db.Products.AsNoTracking()
                 .Where(p => p.Id == id && p.IsActive)

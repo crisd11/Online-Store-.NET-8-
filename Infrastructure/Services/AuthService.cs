@@ -5,10 +5,6 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Core.DTOs;
-using Core.Entities;
-using Core.Interfaces;
-using Infrastructure.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -118,13 +114,13 @@ namespace Infrastructure.Services
             var resetLink = $"{baseUrl}/reset-password?token={user.ResetToken}";
 
             var body = $@"
-        <p>Hola,</p>
-        <p>Recibimos un pedido para restablecer tu contraseña.</p>
-        <p>Hacé clic en el siguiente enlace para definir una nueva contraseña (válido por 1 hora):</p>
+        <p>Hello,</p>
+        <p>We received a request to reset your password.</p>
+        <p>Clicl in the link to define a new password (valid for 1 hour):</p>
         <p><a href=""{resetLink}"">{resetLink}</a></p>
-        <p>Si no fuiste vos, ignorá este correo.</p>";
+        <p>If it wasn't you, ignore this email.</p>";
 
-            await _email.SendAsync(user.Email, "Recuperación de contraseña", body);
+            await _email.SendAsync(user.Email, "Recover Password", body);
         }
 
         public async Task ResetPasswordAsync(string token, string newPassword)

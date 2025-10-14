@@ -25,9 +25,9 @@ namespace API_OnlineStore.Controllers
             return Ok(res);
         }
 
-        [HttpGet("{id:guid}")]
+        [HttpGet("{id}")]
         [AllowAnonymous]
-        public async Task<ActionResult<ProductDTO>> GetById(Guid id)
+        public async Task<ActionResult<ProductDTO>> GetById(int id)
         {
             var res = await _products.GetByIdAsync(id);
             return res is null ? NotFound() : Ok(res);

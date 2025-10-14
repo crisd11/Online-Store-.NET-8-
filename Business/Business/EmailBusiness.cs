@@ -39,9 +39,8 @@ namespace Core.Business
             }
             catch (Exception ex)
             {
-                // Mostralo en la consola o loguealo para ver qué falla
                 Console.WriteLine("❌ Error SMTP: " + ex.Message);
-                throw; // Dejalo para que suba el error al frontend
+                throw;
             }
 
 

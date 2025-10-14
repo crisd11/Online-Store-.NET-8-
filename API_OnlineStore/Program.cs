@@ -1,9 +1,6 @@
 using Core.Business;
 using Core.Interfaces;
-using Core.Interfaces;
 using Infrastructure.Data;
-using Infrastructure.Data;
-using Infrastructure.Services;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
