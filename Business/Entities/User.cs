@@ -24,5 +24,8 @@ namespace Core.Entities
         public string Role { get; set; } = "User";
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public string? ResetToken { get; set; }
+        public DateTime? ResetTokenExpiration { get; set; }
     }
 }

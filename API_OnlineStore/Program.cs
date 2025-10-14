@@ -1,3 +1,4 @@
+using Core.Business;
 using Core.Interfaces;
 using Core.Interfaces;
 using Infrastructure.Data;
@@ -26,6 +27,7 @@ builder.Services.AddDbContext<OnlineStoreDbContext>(options =>
 // Services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IEmailBusiness, EmailBusiness>();
 
 // CORS
 builder.Services.AddCors(options =>

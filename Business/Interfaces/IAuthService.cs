@@ -13,5 +13,7 @@ namespace Core.Interfaces
         Task<AuthResponse> RegisterAsync(RegisterRequest request);
         Task<AuthResponse> LoginAsync(LoginRequest request);
         Task<User?> GetByEmailAsync(string email);
+        Task RecoverPasswordAsync(RecoverPasswordRequest request);
+        Task ResetPasswordAsync(string token, string newPassword);
     }
 }

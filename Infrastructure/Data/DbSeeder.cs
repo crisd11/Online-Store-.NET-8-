@@ -17,7 +17,12 @@ namespace OnlineStore.Infrastructure.Data
                 new Product { Name = "Mouse Inalámbrico Aycron M5", Price = 24.90m, Category = "Periféricos", ImageUrl = "https://picsum.photos/seed/m5/400/300", Description = "Precisión y confort para largas horas." },
                 new Product { Name = "Teclado Mecánico Aycron K60", Price = 89.00m, Category = "Periféricos", ImageUrl = "https://picsum.photos/seed/k60/400/300", Description = "Switches táctiles y retroiluminación." },
                 new Product { Name = "Monitor 27\" Aycron V27", Price = 299.99m, Category = "Monitores", ImageUrl = "https://picsum.photos/seed/v27/400/300", Description = "144Hz, 1ms, panel IPS." },
-                new Product { Name = "Webcam HD Aycron C1", Price = 39.99m, Category = "Video", ImageUrl = "https://picsum.photos/seed/c1/400/300", Description = "1080p con auto-focus." }
+                new Product { Name = "Webcam HD Aycron C1", Price = 39.99m, Category = "Video", ImageUrl = "https://picsum.photos/seed/c1/400/300", Description = "1080p con auto-focus." },
+                new Product { Name = "Auriculares Generico", Price = 29.99m, Category = "Audio", ImageUrl = "https://picsum.photos/seed/a10/400/300", Description = "Sonido nítido y micrófono integrado." },
+                new Product { Name = "Mouse Inalámbrico Generico", Price = 12.90m, Category = "Periféricos", ImageUrl = "https://picsum.photos/seed/m5/400/300", Description = "Precisión y confort para largas horas." },
+                new Product { Name = "Teclado Mecánico Generico", Price = 45.00m, Category = "Periféricos", ImageUrl = "https://picsum.photos/seed/k60/400/300", Description = "Switches táctiles y retroiluminación." },
+                new Product { Name = "Monitor 27\" Generico", Price = 99.99m, Category = "Monitores", ImageUrl = "https://picsum.photos/seed/v27/400/300", Description = "144Hz, 1ms, panel IPS." },
+                new Product { Name = "Webcam HD Generico ", Price = 19.99m, Category = "Video", ImageUrl = "https://picsum.photos/seed/c1/400/300", Description = "1080p con auto-focus." }
             };
 
             db.Products.AddRange(demo);
