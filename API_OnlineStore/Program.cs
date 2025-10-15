@@ -25,6 +25,8 @@ builder.Services.AddDbContext<OnlineStoreDbContext>(options =>
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IEmailBusiness, EmailBusiness>();
+builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddHttpContextAccessor();
 
 // CORS
 builder.Services.AddCors(options =>
