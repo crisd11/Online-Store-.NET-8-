@@ -32,10 +32,5 @@ namespace API_OnlineStore.Controllers
             var res = await _products.GetByIdAsync(id);
             return res is null ? NotFound() : Ok(res);
         }
-
-        // (Admin-only para CRUD futuro)
-        // [HttpPost, Authorize(Policy = "AdminOnly")]
-        // [HttpPut("{id:guid}"), Authorize(Policy = "AdminOnly")]
-        // [HttpDelete("{id:guid}"), Authorize(Policy = "AdminOnly")]
     }
 }
