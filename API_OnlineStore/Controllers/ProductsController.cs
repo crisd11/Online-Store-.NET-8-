@@ -25,6 +25,9 @@ namespace API_OnlineStore.Controllers
             return Ok(res);
         }
 
+        /// <summary>
+        /// Search by Id
+        /// </summary>
         [HttpGet("{id}")]
         [AllowAnonymous]
         public async Task<ActionResult<ProductDTO>> GetById(int id)
