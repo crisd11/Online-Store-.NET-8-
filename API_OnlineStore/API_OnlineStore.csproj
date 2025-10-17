@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -13,7 +13,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.1.2" />
+	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.1.2">
+		  <IncludeAssets>all</IncludeAssets>
+		  <PrivateAssets>none</PrivateAssets>
+	  </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
