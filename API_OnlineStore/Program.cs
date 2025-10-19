@@ -29,12 +29,12 @@ builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddHttpContextAccessor();
 
 // CORS
-var baseUrl = builder.Configuration.GetSection("BaseUrl").Get<string[]>();
+var allowedOrigins = configuration["AllowedOrigins"];
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins(baseUrl)
+        policy.WithOrigins(allowedOrigins)
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
