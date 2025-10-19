@@ -110,15 +110,15 @@ namespace Infrastructure.Services
             user.ResetTokenExpiration = DateTime.UtcNow.AddHours(1);
             await _db.SaveChangesAsync();
 
-            var baseUrl = _config["Frontend:BaseUrl"]?.TrimEnd('/');
+            var baseUrl = _config["BaseUrl"]?.TrimEnd('/');
             var resetLink = $"{baseUrl}/reset-password?token={user.ResetToken}";
 
-            var body = $@"
-        <p>Hello,</p>
-        <p>We received a request to reset your password.</p>
-        <p>Clicl in the link to define a new password (valid for 1 hour):</p>
-        <p><a href=""{resetLink}"">{resetLink}</a></p>
-        <p>If it wasn't you, ignore this email.</p>";
+            var body =  $@"
+                        <p>Hello,</p>
+                        <p>We received a request to reset your password.</p>
+                        <p>Clicl in the link to define a new password (valid for 1 hour):</p>
+                        <p><a href=""{resetLink}"">{resetLink}</a></p>
+                        <p>If it wasn't you, ignore this email.</p>";
 
             await _email.SendAsync(user.Email, "Recover Password", body);
         }

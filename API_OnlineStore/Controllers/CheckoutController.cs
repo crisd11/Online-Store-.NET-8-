@@ -82,7 +82,6 @@ namespace API_OnlineStore.Controllers
                 Metadata = new Dictionary<string, string>{{ "userId", userId.ToString() }}
             };
 
-
             var service = new SessionService();
             var session = service.Create(options);
 
@@ -92,7 +91,6 @@ namespace API_OnlineStore.Controllers
         [HttpPost("webhook")]
         public async Task<IActionResult> Webhook()
         {
-            Console.WriteLine("✅ Webhook recibido");
             var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
             var endpointSecret = _config["Stripe:WebhookSecret"];
 
@@ -107,11 +105,8 @@ namespace API_OnlineStore.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine("❌ Error verificando firma: " + ex.Message);
                 return BadRequest($"Webhook error: {ex.Message}");
             }
-
-            Console.WriteLine($"✅ Evento recibido: {stripeEvent.Type}");
 
             if (stripeEvent.Type == "checkout.session.completed")
             {
@@ -128,9 +123,6 @@ namespace API_OnlineStore.Controllers
 
         private async Task ProcessOrderFromStripeSession(Session session)
         {
-            Console.WriteLine("✅ Entró a ProcessOrderAsync");
-
-            // ✅ Recuperamos el userId desde Metadata (no desde el token)
             if (!session.Metadata.TryGetValue("userId", out var userIdStr) || string.IsNullOrWhiteSpace(userIdStr))
             {
                 Console.WriteLine("❌ No se encontró userId en metadata del stripe session.");
@@ -142,8 +134,6 @@ namespace API_OnlineStore.Controllers
                 Console.WriteLine($"❌ El userId no es un GUID válido: {userIdStr}");
                 return;
             }
-
-            Console.WriteLine($"✅ Usuario ID recuperado: {userId}");
 
             var cartItems = await _db.CartItems
                 .Include(ci => ci.Product)
@@ -173,8 +163,6 @@ namespace API_OnlineStore.Controllers
             _db.CartItems.RemoveRange(cartItems);
 
             await _db.SaveChangesAsync();
-
-            Console.WriteLine($"✅ Orden creada para el usuario {userId}, carrito limpiado.");
         }
     }
 

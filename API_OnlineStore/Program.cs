@@ -26,15 +26,15 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IEmailBusiness, EmailBusiness>();
 builder.Services.AddScoped<ICartService, CartService>();
-builder.Services.AddScoped<ICheckoutService, CheckoutService>();
 builder.Services.AddHttpContextAccessor();
 
 // CORS
+var baseUrl = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:4200")
+        policy.WithOrigins(baseUrl)
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
