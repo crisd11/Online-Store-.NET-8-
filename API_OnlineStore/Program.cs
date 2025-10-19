@@ -29,7 +29,7 @@ builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddHttpContextAccessor();
 
 // CORS
-var baseUrl = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
+var baseUrl = builder.Configuration.GetSection("BaseUrl").Get<string[]>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>

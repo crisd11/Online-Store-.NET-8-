@@ -54,7 +54,7 @@ namespace API_OnlineStore.Controllers
             if (!cartItems.Any())
                 return BadRequest("El carrito está vacío.");
 
-            var domain = _config["Stripe:Domain"] ?? "http://localhost:4200";
+            var baseUrl = _config["BaseUrl"];
 
             StripeConfiguration.ApiKey = _config["Stripe:SecretKey"];
 
@@ -77,8 +77,8 @@ namespace API_OnlineStore.Controllers
                 PaymentMethodTypes = new List<string> { "card" },
                 LineItems = lineItems,
                 Mode = "payment",
-                SuccessUrl = $"{domain}/checkout-success?session_id={{CHECKOUT_SESSION_ID}}",
-                CancelUrl = $"{domain}/checkout-cancel",
+                SuccessUrl = $"{baseUrl}/checkout-success?session_id={{CHECKOUT_SESSION_ID}}",
+                CancelUrl = $"{baseUrl}/checkout-cancel",
                 Metadata = new Dictionary<string, string>{{ "userId", userId.ToString() }}
             };
 
