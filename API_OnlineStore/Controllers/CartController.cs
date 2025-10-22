@@ -10,16 +10,16 @@ namespace API_OnlineStore.Controllers
     [ApiController]
     public class CartController : ControllerBase
     {
-        private readonly ICartService _cartService;
+        private readonly ICartBusiness _cartBusiness;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CartController(ICartService cartService, IHttpContextAccessor accessor)
+        public CartController(ICartBusiness cartBusiness, IHttpContextAccessor accessor)
         {
-            _cartService = cartService;
+            _cartBusiness = cartBusiness;
             _httpContextAccessor = accessor;
         }
 
-        private Guid GetUserId()
+        private int GetUserId()
         {
             var user = _httpContextAccessor.HttpContext?.User
                 ?? throw new Exception("No HttpContext o usuario no autenticado.");
@@ -31,8 +31,8 @@ namespace API_OnlineStore.Controllers
             if (subClaim == null)
                 throw new Exception("No se encontró el claim que identifica al usuario (sub/nameidentifier).");
 
-            if (!Guid.TryParse(subClaim.Value, out var userId))
-                throw new Exception($"El claim de Id no es un GUID válido: {subClaim.Value}");
+            if (!int.TryParse(subClaim.Value, out var userId))
+                throw new Exception($"El claim de Id no es un int válido: {subClaim.Value}");
 
             return userId;
         }
@@ -41,7 +41,7 @@ namespace API_OnlineStore.Controllers
         public async Task<IActionResult> GetCart()
         {
             var userId = GetUserId();
-            var cart = await _cartService.GetCartAsync(userId);
+            var cart = await _cartBusiness.GetCartAsync(userId);
             return Ok(cart);
         }
 
@@ -49,7 +49,7 @@ namespace API_OnlineStore.Controllers
         public async Task<IActionResult> Add([FromBody] CartDTO dto)
         {
             var userId = GetUserId();
-            await _cartService.AddToCartAsync(userId, dto.ProductId, dto.Quantity);
+            await _cartBusiness.AddToCartAsync(userId, dto.ProductId, dto.Quantity);
             return Ok();
         }
 
@@ -57,7 +57,7 @@ namespace API_OnlineStore.Controllers
         public async Task<IActionResult> Update([FromBody] CartDTO dto)
         {
             var userId = GetUserId();
-            await _cartService.UpdateQuantityAsync(userId, dto.ProductId, dto.Quantity);
+            await _cartBusiness.UpdateQuantityAsync(userId, dto.ProductId, dto.Quantity);
             return Ok();
         }
 
@@ -65,7 +65,7 @@ namespace API_OnlineStore.Controllers
         public async Task<IActionResult> Remove(int productId)
         {
             var userId = GetUserId();
-            await _cartService.RemoveFromCartAsync(userId, productId);
+            await _cartBusiness.RemoveFromCartAsync(userId, productId);
             return Ok();
         }
 
@@ -73,7 +73,7 @@ namespace API_OnlineStore.Controllers
         public async Task<IActionResult> Clear()
         {
             var userId = GetUserId();
-            await _cartService.ClearCartAsync(userId);
+            await _cartBusiness.ClearCartAsync(userId);
             return Ok();
         }
     }

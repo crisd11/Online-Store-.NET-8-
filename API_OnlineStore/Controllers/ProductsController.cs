@@ -1,8 +1,8 @@
 ﻿using Core.DTOs;
+using Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnlineStore.Core.DTOs;
-using OnlineStore.Core.Interfaces;
 
 namespace API_OnlineStore.Controllers
 {
@@ -10,9 +10,12 @@ namespace API_OnlineStore.Controllers
     [Route("api/[controller]")]
     public class ProductsController : ControllerBase
     {
-        private readonly IProductService _products;
+        private readonly IProductBusiness _productsBusiness;
 
-        public ProductsController(IProductService products) => _products = products;
+        public ProductsController(IProductBusiness productsBusiness)
+        {
+            _productsBusiness = productsBusiness;
+        }
 
         /// <summary>
         /// Listado con búsqueda/filtrado/paginación/sort
@@ -21,7 +24,7 @@ namespace API_OnlineStore.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<PagedResult<ProductDTO>>> Get([FromQuery] ProductQuery query)
         {
-            var res = await _products.GetAsync(query);
+            var res = await _productsBusiness.GetAsync(query);
             return Ok(res);
         }
 
@@ -32,7 +35,7 @@ namespace API_OnlineStore.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<ProductDTO>> GetById(int id)
         {
-            var res = await _products.GetByIdAsync(id);
+            var res = await _productsBusiness.GetByIdAsync(id);
             return res is null ? NotFound() : Ok(res);
         }
     }

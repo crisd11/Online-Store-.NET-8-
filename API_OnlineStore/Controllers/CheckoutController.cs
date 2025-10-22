@@ -26,7 +26,7 @@ namespace API_OnlineStore.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        private Guid GetUserId()
+        private int GetUserId()
         {
             var user = _httpContextAccessor.HttpContext?.User
                 ?? throw new Exception("No HttpContext o usuario no autenticado.");
@@ -38,7 +38,7 @@ namespace API_OnlineStore.Controllers
             if (subClaim == null)
                 throw new Exception("No se encontró el claim que identifica al usuario (sub/nameidentifier).");
 
-            if (!Guid.TryParse(subClaim.Value, out var userId))
+            if (!int.TryParse(subClaim.Value, out var userId))
                 throw new Exception($"El claim de Id no es un GUID válido: {subClaim.Value}");
 
             return userId;
@@ -129,9 +129,9 @@ namespace API_OnlineStore.Controllers
                 return;
             }
 
-            if (!Guid.TryParse(userIdStr, out var userId))
+            if (!int.TryParse(userIdStr, out var userId))
             {
-                Console.WriteLine($"❌ El userId no es un GUID válido: {userIdStr}");
+                Console.WriteLine($"❌ El userId no es un int válido: {userIdStr}");
                 return;
             }
 

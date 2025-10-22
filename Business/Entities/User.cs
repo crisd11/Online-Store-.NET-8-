@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace Core.Entities
 {
-    public class User
+    public class User : BaseEntity
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
-
         [Required, MaxLength(150)]
         public string Name { get; set; } = null!;
 

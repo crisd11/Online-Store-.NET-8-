@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 
 namespace Core.Entities
 {
-    public class Order
+    public class Order : BaseEntity
     {
-        public int Id { get; set; }
-        public Guid UserId { get; set; }
+        public int UserId { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         [Column(TypeName = "decimal(18,2)")]

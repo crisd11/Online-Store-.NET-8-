@@ -10,11 +10,11 @@ namespace API_OnlineStore.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthService _auth;
+        private readonly IAuthBusiness _authBusiness;
 
-        public AuthController(IAuthService auth)
+        public AuthController(IAuthBusiness authBusiness)
         {
-            _auth = auth;
+            _authBusiness = authBusiness;
         }
 
         [HttpPost("register")]
@@ -22,7 +22,7 @@ namespace API_OnlineStore.Controllers
         {
             try
             {
-                var res = await _auth.RegisterAsync(request);
+                var res = await _authBusiness.RegisterAsync(request);
                 return Ok(res);
             }
             catch (ApplicationException ex)
@@ -36,7 +36,7 @@ namespace API_OnlineStore.Controllers
         {
             try
             {
-                var res = await _auth.LoginAsync(request);
+                var res = await _authBusiness.LoginAsync(request);
                 return Ok(res);
             }
             catch (ApplicationException ex)
@@ -50,8 +50,8 @@ namespace API_OnlineStore.Controllers
         {
             try
             {
-                await _auth.RecoverPasswordAsync(request);
-                return Ok(new { message = "Email enviado correctamente" });
+                await _authBusiness.RecoverPasswordAsync(request);
+                return Ok(new { message = "Email sent correctly" });
             }
             catch (ApplicationException ex)
             {
@@ -64,8 +64,8 @@ namespace API_OnlineStore.Controllers
         {
             try
             {
-                await _auth.ResetPasswordAsync(request.Token, request.NewPassword);
-                return Ok(new { message = "Contraseña actualizada correctamente." });
+                await _authBusiness.ResetPasswordAsync(request.Token, request.NewPassword);
+                return Ok(new { message = "Password updated." });
             }
             catch (ApplicationException ex)
             {

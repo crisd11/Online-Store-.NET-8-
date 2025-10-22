@@ -1,12 +1,11 @@
 using Core.Business;
 using Core.Interfaces;
+using Core.Interfaces.Repositories;
 using Infrastructure.Data;
-using Infrastructure.Services;
+using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using OnlineStore.Core.Interfaces;
-using OnlineStore.Infrastructure.Services;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,14 +21,16 @@ builder.Services.AddDbContext<OnlineStoreDbContext>(options =>
     options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
 // Services
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IAuthBusiness, AuthBusiness>();
+builder.Services.AddScoped<IProductBusiness, ProductBusiness>();
+builder.Services.AddScoped<ICartBusiness, CartBusiness>();
 builder.Services.AddScoped<IEmailBusiness, EmailBusiness>();
-builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddHttpContextAccessor();
 
 // CORS
-var allowedOrigins = configuration["AllowedOrigins"];
+var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>

@@ -1,33 +1,32 @@
 ﻿using Core.DTOs;
 using Core.Entities;
 using Core.Interfaces;
-using Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
+using Core.Interfaces.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace Infrastructure.Services
+namespace Core.Business
 {
-    public class AuthService : IAuthService
+    public class AuthBusiness : IAuthBusiness
     {
-        private readonly OnlineStoreDbContext _db;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IConfiguration _config;
         private readonly IEmailBusiness _email;
 
-        public AuthService(OnlineStoreDbContext db, IConfiguration config, IEmailBusiness email)
+        public AuthBusiness(IUnitOfWork unitOfWork, IConfiguration config, IEmailBusiness email)
         {
-            _db = db;
+            _unitOfWork = unitOfWork;
             _config = config;
             _email = email;
         }
 
         public async Task<AuthResponse> RegisterAsync(RegisterRequest request)
         {
-            var exists = await _db.Users.AnyAsync(u => u.Email == request.Email);
-            if (exists)
+            var userDatabase = await _unitOfWork.UserRepository.GetByEmailAsync(request.Email);
+            if (userDatabase != null)
                 throw new ApplicationException("Email already in use");
 
             var passwordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(request.Password);
@@ -39,28 +38,22 @@ namespace Infrastructure.Services
                 Role = "User"
             };
 
-            _db.Users.Add(user);
-            await _db.SaveChangesAsync();
-
+            await _unitOfWork.UserRepository.Add(user);
+            await _unitOfWork.SaveChangesAsync();
             return GenerateResponse(user);
         }
 
         public async Task<AuthResponse> LoginAsync(LoginRequest request)
         {
-            var user = await _db.Users.SingleOrDefaultAsync(u => u.Email == request.Email);
+            var user = await _unitOfWork.UserRepository.GetByEmailAsync(request.Email);
             if (user == null)
-                throw new ApplicationException("Invalid credentials");
+                throw new ApplicationException("The email provided is not registered as a User");
 
             var valid = BCrypt.Net.BCrypt.EnhancedVerify(request.Password, user.PasswordHash);
             if (!valid)
-                throw new ApplicationException("Invalid credentials");
+                throw new ApplicationException("Invalid Password");
 
             return GenerateResponse(user);
-        }
-
-        public async Task<User?> GetByEmailAsync(string email)
-        {
-            return await _db.Users.SingleOrDefaultAsync(u => u.Email == email);
         }
 
         private AuthResponse GenerateResponse(User user)
@@ -102,18 +95,18 @@ namespace Infrastructure.Services
 
         public async Task RecoverPasswordAsync(RecoverPasswordRequest request)
         {
-            var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+            var user = await _unitOfWork.UserRepository.GetByEmailAsync(request.Email);
             if (user == null)
                 throw new ApplicationException("El email no está registrado.");
 
             user.ResetToken = Guid.NewGuid().ToString("N");
             user.ResetTokenExpiration = DateTime.UtcNow.AddHours(1);
-            await _db.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync();
 
             var baseUrl = _config["BaseUrl"]?.TrimEnd('/');
             var resetLink = $"{baseUrl}/reset-password?token={user.ResetToken}";
 
-            var body =  $@"
+            var body = $@"
                         <p>Hello,</p>
                         <p>We received a request to reset your password.</p>
                         <p>Clicl in the link to define a new password (valid for 1 hour):</p>
@@ -128,8 +121,7 @@ namespace Infrastructure.Services
             if (string.IsNullOrWhiteSpace(token) || string.IsNullOrWhiteSpace(newPassword))
                 throw new ApplicationException("Token or password invalid.");
 
-            var user = await _db.Users.FirstOrDefaultAsync(u =>
-                u.ResetToken == token && u.ResetTokenExpiration > DateTime.UtcNow);
+            var user = _unitOfWork.UserRepository.GetAll().Where(u => u.ResetToken == token && u.ResetTokenExpiration > DateTime.UtcNow).SingleOrDefault();
 
             if (user == null)
                 throw new ApplicationException("Token is invalid or has expired.");
@@ -138,9 +130,8 @@ namespace Infrastructure.Services
             user.ResetToken = null;
             user.ResetTokenExpiration = null;
 
-            _db.Users.Update(user);
-            await _db.SaveChangesAsync();
+            _unitOfWork.UserRepository.Update(user);
+            await _unitOfWork.SaveChangesAsync();
         }
-
     }
 }
